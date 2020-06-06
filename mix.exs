@@ -27,7 +27,8 @@ defmodule RecipeCrawlers.MixProject do
       {:gen_stage, "~> 1.0"},
       {:httpoison, "~> 1.6"},
       {:floki, "~> 0.26.0"},
-      {:jason, "~> 1.2"}
+      {:jason, "~> 1.2"},
+      {:brod, "~> 3.9"}
     ]
   end
 end

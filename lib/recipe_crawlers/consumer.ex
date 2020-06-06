@@ -21,17 +21,18 @@ defmodule RecipeCrawlers.Consumer do
     resp = HTTPoison.get!(loc)
     if resp.status_code == 200 do
       {:ok, page} = Floki.parse_document(resp.body)
-      # img =
-      #   page
-      #   |> Floki.find(page, ".g-print-visible > .recipe__print-cover > img")
-      #   |> Floki.attribute("src")
-      page
-      |> Floki.find("script[type=\"application/ld+json\"]")
-      |> List.first()
-      |> Floki.children()
-      |> Floki.text()
-      |> Jason.decode!()
-      |> IO.inspect()
+      item =
+        page
+        |> Floki.find("script[type=\"application/ld+json\"]")
+        |> List.first()
+
+      if !is_nil(item) do
+        item
+        |> Floki.children()
+        |> Floki.text()
+        |> IO.inspect()
+        |> RecipeCrawlers.MyKafkaProducer.sync()
+      end
     else
       Logger.error("Cannot download " <> loc)
     end
